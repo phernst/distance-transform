@@ -6,7 +6,7 @@ description = "An implementation of the Squared Euclidean distance transform."
 license = "MIT/Apache-2.0"
 
 [dependencies]
-image = { version = "*", optional = true }
+image = { version = "0.18.0", optional = true }
 
 [features]
 default = []
