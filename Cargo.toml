@@ -2,6 +2,8 @@
 name = "distance-transform"
 version = "0.1.0"
 authors = ["Philipp Ernst <phil23940@yahoo.de>"]
+description = "An implementation of the Squared Euclidean distance transform."
+license = "MIT/Apache-2.0"
 
 [dependencies]
 image = { version = "*", optional = true }
