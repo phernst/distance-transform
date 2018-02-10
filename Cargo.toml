@@ -1,0 +1,11 @@
+[package]
+name = "distance-transform"
+version = "0.1.0"
+authors = ["Philipp Ernst <phil23940@yahoo.de>"]
+
+[dependencies]
+image = { version = "*", optional = true }
+
+[features]
+default = []
+image-utils = ["image"]
