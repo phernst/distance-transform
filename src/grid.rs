@@ -32,13 +32,13 @@ impl<T: Default+Clone> GenericGrid<T> {
         if x >= self.width || y >= self.height {
             return None;
         }
-        Some(self.get_unsafe(x, y))
+        Some(self.get_unchecked(x, y))
     }
 
     /// Returns a pointer to the element at position (x, y), without doing
     /// bounds checking.
     pub fn get_unchecked(&self, x: usize, y: usize) -> &T {
-        &self.dara[y*self.width+x]
+        &self.data[y*self.width+x]
     }
 
     /// Sets the value of the grid at position (x,y)
