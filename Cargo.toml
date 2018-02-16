@@ -1,6 +1,6 @@
 [package]
 name = "distance-transform"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Philipp Ernst <phil23940@yahoo.de>"]
 description = "An implementation of the Squared Euclidean distance transform."
 repository = "https://github.com/phernst/distance-transform"
