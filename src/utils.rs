@@ -11,35 +11,19 @@ use super::grid::*;
 ///
 /// Maps the values of `input` to the interval `[range.0, range.1]`
 pub fn min_max_scaling(input: &FloatGrid, range: &(f64, f64)) -> FloatGrid {
-    let (min_value, max_value) = {
-        let mut curmin = input.get(0, 0).unwrap();
-        let mut curmax = input.get(0, 0).unwrap();
-        for y in 0..input.height() {
-            for x in 0..input.width() {
-                if let Some(v) = input.get(x, y) {
-                    if v < curmin {
-                        curmin = v;
-                    }
-                    if v > curmax {
-                        curmax = v;
-                    }
-                }
-            }
-        }
-        (curmin, curmax)
-    };
+    let (min_value, max_value) = input.iter().fold((f64::INFINITY, f64::NEG_INFINITY), |acc, (_,_,&val)| {
+        (acc.0.min(val), acc.1.max(val))
+    });
 
     if min_value == max_value {
         return FloatGrid::new(input.width(), input.height());
     }
 
     let mut result = FloatGrid::new(input.width(), input.height());
-    for y in 0..input.height() {
-        for x in 0..input.width() {
-            let mut newval = (input.get(x, y).unwrap() - min_value)/(max_value - min_value);
-            newval = newval*(range.1-range.0) - range.0;
-            result.set(x, y, newval);
-        }
+    for (x, y, &val) in input.iter() {
+        let mut newval = (val - min_value)/(max_value - min_value);
+        newval = newval*(range.1-range.0) - range.0;
+        result.set(x, y, newval);
     }
     result
 }
@@ -64,11 +48,9 @@ pub fn save_float_grid<W: Write>(float_grid: &FloatGrid, w: &mut W, format: imag
 /// # Safety
 /// Assumes that all values of the grid are non-negative.
 pub fn sqrt_img(mut im: FloatGrid) -> FloatGrid {
-    for y in 0..im.height() {
-        for x in 0..im.width() {
-            let newval = im.get(x, y).unwrap().sqrt();
-            im.set(x, y, newval);
-        }
+    for (_, _, val) in im.iter_mut() {
+        let newval = val.sqrt();
+        *val = newval;
     }
     im
 }

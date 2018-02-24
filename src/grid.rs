@@ -1,5 +1,7 @@
-//! This module contains type defintions for two-dimensional grids
+//! This module contains type definitions for two-dimensional grids
 //! that are used in the distance transform methods.
+
+use std::slice::{Iter,IterMut};
 
 /// A two-dimensional grid of an arbitrary type `T`
 #[derive(Debug,Clone)]
@@ -50,6 +52,74 @@ impl<T: Default+Clone> GenericGrid<T> {
     /// `grid[x, y] == vec[y*grid.width + x]`
     pub fn to_vec(self) -> Vec<T> {
         self.data
+    }
+
+    /// Returns an iterator over the nodes of the grid.
+    /// An item of the iterator contains the position
+    /// and a reference to the node: `(x, y, value)`
+    pub fn iter(&self) -> GridIter<T> {
+        GridIter {
+            data_it: self.data.iter(),
+            width: self.width,
+            pos: 0,
+        }
+    }
+
+    /// Returns an iterator over the nodes of the grid.
+    /// An item of the iterator contains the position
+    /// and a mutable reference to the node: `(x, y, value)`
+    pub fn iter_mut(&mut self) -> GridIterMut<T> {
+        GridIterMut {
+            data_it: self.data.iter_mut(),
+            width: self.width,
+            pos: 0,
+        }
+    }
+}
+
+/// Iterate over the nodes of a grid.
+#[derive(Debug)]
+pub struct GridIter<'a, T: 'a> {
+    data_it: Iter<'a, T>,
+    width: usize,
+    pos: usize,
+}
+
+impl<'a, T> Iterator for GridIter<'a, T> {
+    type Item = (usize, usize, &'a T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.data_it.next() {
+            Some(val) => {
+                let res = (self.pos % self.width, self.pos/self.width, val);
+                self.pos += 1;
+                Some(res)
+            },
+            None => None,
+        }
+    }
+}
+
+/// Iterate mutably over the nodes of a grid.
+#[derive(Debug)]
+pub struct GridIterMut<'a, T: 'a> {
+    data_it: IterMut<'a, T>,
+    width: usize,
+    pos: usize,
+}
+
+impl<'a, T> Iterator for GridIterMut<'a, T> {
+    type Item = (usize, usize, &'a mut T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.data_it.next() {
+            Some(val) => {
+                let res = (self.pos % self.width, self.pos/self.width, val);
+                self.pos += 1;
+                Some(res)
+            },
+            None => None,
+        }
     }
 }
 

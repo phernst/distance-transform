@@ -1,8 +1,9 @@
 //! This module contains the functions for calculating the distance transform.
 
 pub use super::grid::*;
+use std::f64;
 
-const INF: f64 = 100000002004087734272.;
+const INF: f64 = f64::MAX;
 
 /* dt of 1d function using squared distance */
 fn dt1d_float(f: &Vec<f64>) -> Vec<f64> {
@@ -85,10 +86,8 @@ pub fn dt2d(im: &BoolGrid) -> FloatGrid {
     let height = im.height();
 
     let mut out = FloatGrid::new(width, height);
-    for y in 0..height {
-        for x in 0..width {
-            out.set(x, y, if *im.get(x, y).unwrap() { 0. } else { INF });
-        }
+    for (x, y, &val) in im.iter() {
+        out.set(x, y, if val { 0. } else { INF });
     }
 
     dt2d_float(&out)

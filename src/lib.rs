@@ -24,12 +24,10 @@
 //!     let mut bimg = BoolGrid::new(imgwidth, imgheight);
 //! 
 //!     // draw a circle
-//!     for y in 0..bimg.height() {
-//!         for x in 0..bimg.width() {
-//!             let pos = (x as isize - 64)*(x as isize - 64)
-//!                     + (y as isize - 64)*(y as isize - 64);
-//!             bimg.set(x, y, pos < 32*32 && pos > 31*31);
-//!         }
+//!     for (x, y, value) in bimg.iter_mut() {
+//!         let pos = (x as isize - 64)*(x as isize - 64)
+//!                 + (y as isize - 64)*(y as isize - 64);
+//!         *value = pos < 32*32 && pos > 31*31;
 //!     }
 //! 
 //!     // do the distance transformation and
